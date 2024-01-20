@@ -1,0 +1,89 @@
+from taipy.gui import Gui, notify
+import pandas as pd 
+import webbrowser
+import datetime
+page_header = """
+<center>
+<|navbar|lov={[("page1", "This Page"), ("https://docs.taipy.io/en/latest/manuals/gui/viselements/controls/", "Taipy Documentation")]}|>
+</center>
+
+Data Dashboard with Taipy
+=============================
+<|layout|columns = 1 3|
+<|
+### Upload and Manage data here!!
+<br/>
+<center>
+<|{path}|file_selector|label=Select File|on_action=select_action|extensions=.csv,.xlsx|drop_message=Select your weather data!|>
+</center>
+|>
+<|
+#Joe Young (he loves us)
+<|{logo}|image|height=600px|width=562px|on_action=image_action|>
+|>
+|>
+"""
+
+section_2 = """
+##Data Visualization
+<|{dataset}|chart|mode=lines|x=Date|y[1]=MinTemp|y[2]=MaxTemp|color[1]=blue|color[2]=red|>
+"""
+
+section_3 = """
+<|layout|column = 1 5|
+<|
+## Custom Parameters
+**Starting Date**\n\n<|{start_date}|date|not with_time|on_change=start_date_onchange|>
+<br/><br/>
+**End Date**\n\n<|{end_date}|date|not with_time|on_change=end_date_onchange|>
+<br/><br/>
+<|button|label=GO|on_action=button_action|>
+|>
+<|
+<center><h2>Dataset</h2><|{download_data}|file_download|on_action=download|>
+</center>
+<center>
+<|{dataset}|table|page_size=10|height=500px|width=65%|>
+</center>
+|>
+|>
+
+"""
+
+
+def image_action(state):
+    webbrowser.open("https://profiles.rice.edu/faculty/joseph-young")
+
+def get_data(path: str):
+    dataset = pd.read_csv(path)
+    dataset["Date"] = pd.to_datetime(dataset["Date"]).dt.date
+    return dataset
+
+def select_action(state, var_name, value):
+    state.dataset = get_data(state.path)
+
+def start_date_onchange(state, var_name, value):
+    state.start_date = value.date()
+
+def end_date_onchange(state, var_name, value):  
+    state.end_date = value.date()
+
+def filter_by_date_range(dataset, start_date, end_date):
+    mask = (dataset['Date'] > start_date) & (dataset['Date'] <= end_date)
+    return dataset.loc[mask]
+
+def button_action(state):
+    state.dataset = filter_by_date_range(dataset, state.start_date, state.end_date) # changes the dataset to reflect dates
+    notify(state, "info", "updated date range from {} to {}".format(start_date.strftime("%m/%d/%Y"), end_date.strftime("%m/%d/%Y")))
+
+def download(state):
+    state.dataset.to_csv('download.csv')
+
+logo = "images/joe.png"
+dataset = get_data("data/weather.csv")
+start_date = datetime.date(2008, 12, 1)
+end_date = datetime.date(2017, 6, 25)
+download_data = "download.csv"
+path = "data/weather.csv"
+
+Gui(page = page_header+section_2+section_3).run()
