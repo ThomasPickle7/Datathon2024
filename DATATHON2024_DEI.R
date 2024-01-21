@@ -241,6 +241,8 @@ ggplot()+
 
 #separate maps
 sf_use_s2(use_s2=FALSE)
+#citation:
+#https://www.rdocumentation.org/packages/sf/versions/1.0-15/topics/s2
 #turn back TRUE is the default
 #this allows me to set latitude and longtitude in decimal places
 
