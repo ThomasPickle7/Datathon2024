@@ -6,7 +6,7 @@ Challenge
 
 2. Mapping
 
-The main function of the R file is to extract sleep data from the CDC and ACS data from the US Census using the tidycensus library. Subsequently, the data is merged based on Census Tract numbers.
+The main function of the R file is to extract sleep survey response data from the CDC and ACS data from the US Census using the tidycensus library. Subsequently, the data is merged based on Census Tract numbers.
 
 The sleep data is sourced from the CDC (https://data.cdc.gov/500-Cities-Places/500-Cities-Sleeping-less-than-7-hours-among-adults/eqbn-8mpz/data_preview). Locations with less than 50 data points are disregarded as they do not provide sufficient sleep information.
 
