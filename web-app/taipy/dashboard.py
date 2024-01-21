@@ -19,9 +19,6 @@ import datetime
 **End Date**\n\n<|{end_date}|date|not with_time|on_change=end_date_onchange|>
 <br/><br/>*/
 """
-"""
-<|{raw_dataset}|chart|mode=lines|x=Epoch|y[1]=EEG-Fpz-Cz|y[2]=EEG-Pz-Oz|y[3]=EOG-horizontal|y[4]=Resp-oro-nasal|y[5]=EMG-submental|y[6]=Temp-rectal|color[1]=red|color[2]=orange|color[3]=yellow|color[4]=green|color[5]=blue|color[6]=purple|>
-"""
 #masthead of the GUI
 masthead = """
 <|layout|columns = 7 1|
@@ -124,7 +121,7 @@ upload = """
 
 <|
 ##Data Visualization
-
+<|{raw_dataset_graph}|chart|mode=lines|x=Epoch|y[1]=EEG-Fpz-Cz|y[2]=EEG-Pz-Oz|y[3]=EOG-horizontal|y[4]=Resp-oro-nasal|y[5]=EMG-submental|y[6]=Temp-rectal|color[1]=red|color[2]=orange|color[3]=yellow|color[4]=green|color[5]=blue|color[6]=purple|>
 <|{img_model}|image|height=500px|width=500px|on_action=image_action|>
 |>
 |>
@@ -236,31 +233,37 @@ def button_action_model(state, id):
 
 def download(state):
     """
-    when pressed, downloads a csv of the modeled data form teh raw inputs
+    when pressed, downloads a csv of the modeled data form the raw inputs
     """
     state.dataset.to_csv('download.csv')
 
 def load_raw_files(X_path):
-    
-    channels = ['Epoch', 'EEG-Fpz-Cz', 'EEG-Pz-Oz', 'EOG-horizontal', 'Resp-oro-nasal', 'EMG-submental', 'Temp-rectal']
+    """
+    loads and downsamples raw x data to be displayed in graph
+    """
+    channels = ['EEG-Fpz-Cz', 'EEG-Pz-Oz', 'EOG-horizontal', 'Resp-oro-nasal', 'EMG-submental', 'Temp-rectal', 'Epoch']
     
     X = np.load(X_path)
     X_prime = np.reshape(X, (X.shape[1], -1))
-    idx = np.array([range(0,X_prime.shape[1])])
-    print(X_prime.shape, idx.shape)
-    
-    X_fin = np.concatenate((X_prime, idx), axis=0)
+    X_ds = X_prime[:, ::1000]
+    idx = np.array([range(0,X_ds.shape[1])])
+    X_fin = np.concatenate((X_ds, idx), axis=0)
     X_rot = np.rot90(X_fin)
+    print(X_rot.shape)
     df = pd.DataFrame(data=X_rot,index=np.array(range(0,X_rot.shape[0])), columns=channels)
     return df
+
+
 
 
 img_map = "images/maps/USA.jpeg"
 img_model = "images/joe.png"
 txt_model = "howdy howdy howdy"
 logo = "images/joe.png"
+raw_data = "data/p00_n1_X.npy"
+raw_dataset_graph = load_raw_files(raw_data) #dataframe
+model_data = "data/p00_n1_y"
 
-raw_dataset = load_raw_files("data/p00_n1_X.npy") #dataframe
 
 dataset = get_data("data/weather.csv")
 start_date = datetime.date(2008, 12, 1)
