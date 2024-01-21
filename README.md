@@ -3,6 +3,8 @@ Challenge
 
 
 1. Model
+The function that launches the interactive GUI is dashboard.py, loacted in web-app/taipy. Its important to note that since data was too large to store in Github, Users need to manually upload the default data "/data/p00_n1_NEW_X.npy" and "/data/p00_n1_NEW_y.npy" to web-app/taipy/data. 
+
 
 2. Mapping
 
