@@ -48,6 +48,11 @@ my_api_key="Your_API_Key_Goes_HERE"
 #if you need your API code, there is a website in US Census website.
 
 options(tigris_use_cache = TRUE)
+#TIGER / shape line file
+#https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html
+#Tigris documentation:
+#https://www.rdocumentation.org/packages/tigris/versions/2.0.4/topics/tigris
+
 
 census_api_key(my_api_key)
 
