@@ -19,6 +19,9 @@ import datetime
 **End Date**\n\n<|{end_date}|date|not with_time|on_change=end_date_onchange|>
 <br/><br/>*/
 """
+"""
+<|{raw_dataset}|chart|mode=lines|x=Epoch|y[1]=EEG-Fpz-Cz|y[2]=EEG-Pz-Oz|y[3]=EOG-horizontal|y[4]=Resp-oro-nasal|y[5]=EMG-submental|y[6]=Temp-rectal|color[1]=red|color[2]=orange|color[3]=yellow|color[4]=green|color[5]=blue|color[6]=purple|>
+"""
 #masthead of the GUI
 masthead = """
 <|layout|columns = 7 1|
@@ -121,7 +124,7 @@ upload = """
 
 <|
 ##Data Visualization
-<|{dataset}|chart|mode=lines|x=Date|y[1]=MinTemp|y[2]=MaxTemp|color[1]=blue|color[2]=red|>
+
 <|{img_model}|image|height=500px|width=500px|on_action=image_action|>
 |>
 |>
@@ -155,47 +158,6 @@ def get_data(path: str):
     return dataset
 
 
-#slight change "getting rid of 26files"
-#made it to pd.read_csv
-
-def load_xgb_files(file_path, **kwargs):
-    # Initialize empty lists to store features and labels
-    all_X = []
-    all_y = []
-    import pandas as pd
-    counter = 0
-
-    X_train = pd.read_csv(file_path)
-    y_train = pd.read_csv(file_path)
-    y_train = [int(i) - 1 for i in y_train]
-    # # if decimate is true, only use every fifth sample for waking state (y=0)
-
-        #THEO: I am not sure what kwargs do.
-    if kwargs.get('decimate'):
-        for i in range(len(X_train)):
-            if(y_train[i] != 0 or counter == 0):
-                all_X.append(X_train[i].transpose())
-                for j in range(3000):
-                    all_y.append(y_train[i])
-            counter += 1
-            counter %= 5
-    else:
-        for i in range(len(y_train)):
-            all_X.append(X_train[i].transpose())
-            for j in range(3000):
-                all_y.append(y_train[i])
-
-        #THEO: is this fine?
-        all_X = pd.DataFrame(data=all_X)
-        #want to create column names
-        all_X.columns = ['EEG Fpz-Cz', 'EEG Pz-Oz', 'EOG horizontal', 'Resp oro-nasal', 'EMG submental','Temp rectal']
-        all_y = np.array(all_y)
-
-    return all_X, all_y, y_train
-
-
-
-
 
 
 
@@ -206,7 +168,7 @@ def select_action(state, var_name, value):
     """
     changes current raw dataset to the uploaded file
     """
-    state.dataset = get_data(state.path)
+    state.raw_dataset = load_raw_files(state.path)
 
 #not applicable, remove/modify in final implementation
 def start_date_onchange(state, var_name, value):
@@ -278,12 +240,27 @@ def download(state):
     """
     state.dataset.to_csv('download.csv')
 
+def load_raw_files(X_path):
+    
+    channels = ['Epoch', 'EEG-Fpz-Cz', 'EEG-Pz-Oz', 'EOG-horizontal', 'Resp-oro-nasal', 'EMG-submental', 'Temp-rectal']
+    
+    X = np.load(X_path)
+    X_prime = np.reshape(X, (X.shape[1], -1))
+    idx = np.array([range(0,X_prime.shape[1])])
+    print(X_prime.shape, idx.shape)
+    
+    X_fin = np.concatenate((X_prime, idx), axis=0)
+    X_rot = np.rot90(X_fin)
+    df = pd.DataFrame(data=X_rot,index=np.array(range(0,X_rot.shape[0])), columns=channels)
+    return df
+
 
 img_map = "images/maps/USA.jpeg"
 img_model = "images/joe.png"
 txt_model = "howdy howdy howdy"
 logo = "images/joe.png"
 
+raw_dataset = load_raw_files("data/p00_n1_X.npy") #dataframe
 
 dataset = get_data("data/weather.csv")
 start_date = datetime.date(2008, 12, 1)
