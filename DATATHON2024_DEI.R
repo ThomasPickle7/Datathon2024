@@ -433,7 +433,8 @@ ggplot()+
 #STATE CODE IS 06
 #LOCATION IS:
 point_to=c(-122.4,37.76)
-#San Bruno Mountain
+#San Bruno coordinates is weird..
+#Rainbow Grocery Cooperative - places next to I-101 highway
 
 ggplot()+
   geom_sf(data=state_mapping,color="black",fill="#d1ffe1",
