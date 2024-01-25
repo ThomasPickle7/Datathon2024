@@ -12,10 +12,10 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import mne
 
-xgbf_file_name = "/Users/leomarek/PycharmProjects/sleepArch/web-app/taipy/pkl/xgb_fd.pkl"
-CNN_file_name = "/Users/leomarek/PycharmProjects/sleepArch/web-app/taipy/pkl/cnn_td.pkl"
-DNN_file_name = "/Users/leomarek/PycharmProjects/sleepArch/web-app/taipy/pkl/dnn_td.pkl"
-xgb_file_name = "/Users/leomarek/PycharmProjects/sleepArch/web-app/taipy/pkl/xgb_td.pkl"
+xgbf_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/xgb_fd.pkl"
+CNN_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/cnn_td.pkl"
+DNN_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/dnn_td.pkl"
+xgb_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/xgb_td.pkl"
 # globally define training and test data paths
 file_paths = [
     '/Training/p00_n1',

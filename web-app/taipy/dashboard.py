@@ -410,12 +410,6 @@ data = load_data_files("data/p00_n1_NEW_y.npy")
 raw_data = os.getcwd()+"/data/p00_n1_NEW_X.npy"
 raw_dataset_graph = load_raw_files(raw_data) #dataframe
 
-
-dataset = get_data("data/weather.csv")
-start_date = datetime.date(2008, 12, 1)
-end_date = datetime.date(2017, 6, 25)
-download_data = "download.csv"
-path = "data/weather.csv"
 page = masthead+about+preproc+upload+results+acknowledge
 # put default function (XGB) here when its integrated
 run_func = ""
