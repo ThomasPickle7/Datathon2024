@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import webbrowser
 import datetime
+import ML
 
 """
 <center>
@@ -134,11 +135,23 @@ pleased with the results.
 <br></br>
 |>
 
+<<<<<<< Updated upstream
+=======
+preproc = """
+<|layout|columns 2 1|
+<| 
+##Pre-Processing and Analysis
+<|{sample_text}|>
+<br></br>
+|>
+
+>>>>>>> Stashed changes
 <|
 <center>
 <|{img_preproc}|image|height=500px|width=750px|on_action=image_action|>
 </center>
 <br></br>
+<<<<<<< Updated upstream
 <|layout|columns = 4*1|
 
 <|
@@ -161,6 +174,24 @@ pleased with the results.
 <center>
 <|button|label=Time Domain|on_action=button_action_preproc|id=time|>
 </center>
+=======
+<|layout|columns 1 1 1 1|
+
+<|
+<|button|label=EEG Map|on_action=button_action_preproc|id=eeg|>
+|>
+
+<|
+<|button|label=Block Diagram|on_action=button_action_preproc|id=diagram|>
+|>
+
+<|
+<|button|label=Power Spectrum Analysis|on_action=button_action_preproc|id=freq|>
+|>
+ 
+<|
+<|button|label=Time Domain|on_action=button_action_preproc|id=time|>
+>>>>>>> Stashed changes
 |>
 
 |>
@@ -192,7 +223,10 @@ upload = """
 <|button|label=CNN|on_action=button_action_model|id=CNN|>
 |>
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 |>
 ### Select the desired model for your data, then hit Run to see your hypnogram!
 <br></br>
@@ -211,7 +245,11 @@ results = """
 <br></br>
 #Live Results
 <br></br>
+<<<<<<< Updated upstream
 <|{model_data}|chart|mode=lines|x=Epochs (30s)|y=Sleep Stage|>
+=======
+<|{model_data}|chart|mode=lines|x=X|y=Y|>
+>>>>>>> Stashed changes
 """
 #ackowledgementsection, contains citations/references and whatnot
 acknowledge = """
@@ -282,17 +320,15 @@ def get_data(path: str):
 
 
 
-
-
-
-
-
 def select_action(state, var_name, value):
     """
     changes current raw dataset to the uploaded file
     """
     state.raw_data = state.path
+<<<<<<< Updated upstream
     state.raw_dataset_graph = load_raw_files(state.raw_data)
+=======
+>>>>>>> Stashed changes
 
 #not applicable, remove/modify in final implementation
 def start_date_onchange(state, var_name, value):
@@ -308,12 +344,20 @@ def filter_by_date_range(dataset, start_date, end_date):
     return dataset.loc[mask]
 
 
+
+
 def button_action_run(state):
     """
     when the run button is pressed, the currently toggled function is called on the raw_dataset.
     """
 
+<<<<<<< Updated upstream
     state.model_data = y_to_model_data(state.data)
+=======
+    state.model_dataset = state.data
+
+
+>>>>>>> Stashed changes
 
 def button_action_map(state, id):
     """
@@ -346,17 +390,39 @@ def button_action_preproc(state, id):
     state.img_preproc = assets[id] # changes the dataset to reflect dates
 
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 def button_action_model(state, id):
     """
     When a model button is pressed, the img_model and txt_model should be updated accordingly, and
     the function used when running the model should be updated accordingly.
     """
+<<<<<<< Updated upstream
 
+=======
+    imgs= {
+        'XGB': "images/diagrams/XGB.png",
+        'DNN': "images/diagrams/DNN.png",
+        'CNN': "images/diagrams/CNN.png"
+    }
+    txt = {
+        'XGB': "XGB",
+        'DNN': "DNN",
+        'CNN': "CNN"
+    }
+>>>>>>> Stashed changes
     func = {
         'XGB': ML.call_FRQ(state.raw_data),
         'DNN': ML.call_DNN(state.raw_data),
         'CNN': ML.call_CNN(state.raw_data)
     }
+<<<<<<< Updated upstream
+=======
+    state.img_model = imgs[id] # changes the image for the model
+    state.txt_model = txt[id] # changes the displayed text for the model
+>>>>>>> Stashed changes
     state.data = func[id] # changes the run function based on button ID
 
 def download(state):
@@ -377,7 +443,11 @@ def load_raw_files(X_path):
     idx = np.array([range(0,X_ds.shape[1])])
     X_fin = np.concatenate((X_ds, idx), axis=0)
     X_rot = np.rot90(X_fin)
+<<<<<<< Updated upstream
     df = pd.DataFrame(data=X_rot,index=np.array(range(0,X_rot.shape[0])), columns=channels)
+=======
+    df = pd.DataFrame(data=X_rot,index=np.array(range(0, X_rot.shape[0])), columns=channels)
+>>>>>>> Stashed changes
     return df
 
 def load_data_files(y_path):
@@ -385,6 +455,7 @@ def load_data_files(y_path):
     y_vals = y.tolist()
     idx = range(0, y.shape[0])
     model_data = {
+<<<<<<< Updated upstream
         "Epochs (30s)": idx,
         "Sleep Stage":y_vals
     }
@@ -397,11 +468,22 @@ def y_to_model_data(y):
         "Sleep Stage":y_vals
     }
     return model_data
+=======
+        "X": idx,
+        "Y":y_vals
+    }
+    return model_data
+
+    
+
+
+>>>>>>> Stashed changes
 
 img_map = "/images/maps/USA.jpeg"
 img_model = "/images/xgb_diagram.png"
 img_preproc = "/images/figures/block_diagram.png"
 
+<<<<<<< Updated upstream
 txt_model = "howdy howdy howdy"
 logo = "/images/joe.png"
 
@@ -410,10 +492,34 @@ data = load_data_files("data/p00_n1_NEW_y.npy")
 raw_data = os.getcwd()+"/data/p00_n1_NEW_X.npy"
 raw_dataset_graph = load_raw_files(raw_data) #dataframe
 
+=======
+
+img_map = "images/maps/USA.jpeg"
+img_model = "images/joe.png"
+img_preproc = "images/figures/EEG.png"
+
+logo = "images/joe.png"
+
+
+raw_data = 'C:/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/data/p00_n1_X.npy'
+raw_dataset_graph = load_raw_files(raw_data) #dataframe
+
+model_data = load_data_files("data/p00_n1_y.npy")
+
+data = load_data_files("data/p00_n1_y.npy")
+
+dataset = get_data("data/weather.csv")
+start_date = datetime.date(2008, 12, 1)
+end_date = datetime.date(2017, 6, 25)
+download_data = "download.csv"
+path = "data/weather.csv"
+>>>>>>> Stashed changes
 page = masthead+about+preproc+upload+results+acknowledge
 # put default function (XGB) here when its integrated
 run_func = ""
 
+
+txt_model = "howdy howdy howdy"
 sample_text = """
 Lorem ipsum dolor sit amet, consectetur adipiscing elit,
  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 

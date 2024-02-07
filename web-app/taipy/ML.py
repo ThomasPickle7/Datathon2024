@@ -12,10 +12,17 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import mne
 
+<<<<<<< Updated upstream
 xgbf_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/xgb_fd.pkl"
 CNN_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/cnn_td.pkl"
 DNN_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/dnn_td.pkl"
 xgb_file_name = "/Users/tapic/Documents/GitHub/Datathon2024/web-app/taipy/pkl/xgb_td.pkl"
+=======
+xgb_file_name = "xgb_td.pkl"
+xgbf_file_name = "xgb_fd.pkl"
+CNN_file_name = "cnn_td.pkl"
+DNN_file_name = "dnn_td.pkl"
+>>>>>>> Stashed changes
 # globally define training and test data paths
 file_paths = [
     '/Training/p00_n1',
@@ -80,14 +87,22 @@ def call_CNN(file_name):
     X_test, _ = load_files([file_name], decimate=False, test=True)
     CNN = pickle.load(open(CNN_file_name, "rb"))
     y_pred = CNN.predict(X_test)
+<<<<<<< Updated upstream
     return y_pred.transpose()
+=======
+    return y_pred
+>>>>>>> Stashed changes
 
 
 def call_DNN(file_name):
     X_test, _ = load_files([file_name], decimate=False, test=True)
     DNN = pickle.load(open(DNN_file_name, "rb"))
     y_pred = DNN.predict(X_test)
+<<<<<<< Updated upstream
     return y_pred.transpose()
+=======
+    return y_pred
+>>>>>>> Stashed changes
 
 
 def call_FRQ(file_name):
@@ -95,10 +110,13 @@ def call_FRQ(file_name):
     xgb_model_f = pickle.load(open(xgbf_file_name, "rb"))
     xg_test = xgb.DMatrix(X_test)
     y_pred = xgb_model_f.predict(xg_test)
+<<<<<<< Updated upstream
     # set any non zero values with zeros on either side to zero
     for i in range(2, len(y_pred) - 2):
         if y_pred[i] != 0 and y_pred[i - 1] == 0 and y_pred[i + 1] == 0:
             y_pred[i] = 0
+=======
+>>>>>>> Stashed changes
     return y_pred
 
 
@@ -276,8 +294,13 @@ def load_xgb_files(file_paths, **kwargs):
 
 def run_xgb(X_train, y_train, all_eX, all_ey, act_y, **kwargs):
     if kwargs.get('domain') == 'freq':
+<<<<<<< Updated upstream
         param = {'objective': 'multi:softmax', 'eta': 0.8,
                  'gamma': 0.3, 'lambda': 1.0, 'alpha': 0.0,
+=======
+        param = {'objective': 'multi:softmax', 'eta': 0.3,
+                 'gamma': 0.0, 'lambda': 1.0, 'alpha': 0.0,
+>>>>>>> Stashed changes
                  'max_depth': 6, 'nthread': 8, 'num_class': 6}
     else:
         param = {'objective': 'multi:softmax', 'eta': 0.2, 'max_depth': 6, 'nthread': 8, 'num_class': 6}
@@ -366,10 +389,21 @@ def run_xgb(X_train, y_train, all_eX, all_ey, act_y, **kwargs):
 
         stages = np.array(stages)
 
+<<<<<<< Updated upstream
     for i in range(2, len(y_pred) - 2):
         if y_pred[i] != 0 and y_pred[i - 1] == 0 and y_pred[i + 1] == 0:
             y_pred[i] = 0
 
+=======
+    for i in range(2, len(stages) - 2):
+        if stages[i] != stages[i - 1]:
+            stages[i] = stages[i - 1]
+        if stages[i] != stages[i + 1]:
+            stages[i] = stages[i + 1]
+
+    stages[:3] = np.zeros(3)
+    stages[len(stages) - 3:] = np.zeros(3)
+>>>>>>> Stashed changes
 
     # Evaluate the performance of the model
     # Print classification report for detailed metrics
@@ -431,6 +465,7 @@ def train_cnn(X_train, y_train):
 
 
 if __name__ == '__main__':
+<<<<<<< Updated upstream
     y = call_FRQ('Neurotech@Rice Datathon Challenge/Training/p00_n1_NEW_X.npy')
     plt.plot(range(len(y)), y, color='maroon')
     plt.show()
@@ -480,6 +515,24 @@ if __name__ == '__main__':
 
     run_xgb(X_train, y_train, all_eX, act_y, act_y, domain='freq', mode='retrain')
 
+=======
+    y = call_FRQ('data/p00_n1_X.npy')
+    # plt.plot(range(len(y)), y, color='maroon')
+    # plt.show()
+    y = call_CNN('data/p00_n1_X.npy')
+    plt.plot(range(len(y)), y, color='maroon')
+    plt.show()
+    y = call_DNN('data/p00_n1_X.npy')
+    # plt.plot(range(len(y)), y, color='maroon')
+    # plt.show()
+
+    # # # intake XGB data
+    # # X_train, y_train, _ = load_xgb_files(file_paths, decimate=True)
+    # # all_eX, all_ey, act_y = load_xgb_files(test_file_paths, decimate=False)
+    # #
+    # # run_xgb(X_train, y_train, all_eX, all_ey, act_y, load=False, train=True, freq=False)
+    #
+>>>>>>> Stashed changes
     # # # # train the xgb model
     # X_train, y_train = load_freq_files(file_paths, decimate=False)
     # all_eX, act_y = load_freq_files(test_file_paths, decimate=False)
